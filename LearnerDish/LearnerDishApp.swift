@@ -6,12 +6,25 @@
 //
 
 import SwiftUI
+import Firebase
+import FirebaseCore
+import FirebaseFirestore
+import FirebaseAuth
 
 @main
 struct LearnerDishApp: App {
+    @StateObject var user = UserModel()
+
+    init() {
+            FirebaseApp.configure()
+            //FirebaseConfiguration.shared.setLoggerLevel(.debug)
+        }
+    
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(user)
         }
     }
 }

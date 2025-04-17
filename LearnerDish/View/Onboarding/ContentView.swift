@@ -19,7 +19,7 @@ struct ContentView: View {
                     // 배경
                     CheckBackground(
                         lineColor: Color(red: 1, green: 0.94, blue: 0.63),
-                        backgroundColor: Color.white,
+                        backgroundColor: Color.white,cornerRadius : 30,
                         opacity: 0.6
                     )
 

@@ -9,58 +9,91 @@ import SwiftUI
 
 struct ChoiceView: View {
     @Environment(\.dismiss) var dismiss
-
+    @EnvironmentObject var user: UserModel
+    
+    @State private var selectedOptions: [QuestionOption] = []
+    @State private var currentIndex: Int = 0
+    @State private var questionGroups: [QuestionGroup] = []
+    
+    //private let questionGroups = Array(allQuestionGroups.shuffled().prefix(4))
+    
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            // ✅ 안내 텍스트
-            Text("1/4")
-                .font(Font.custom("Righteous", size: 23).weight(.medium))
-                .foregroundColor(Color(red: 1, green: 0.22, blue: 0.1))
-                .frame(width: 344.28, alignment: .leading)
-                .padding(.top, 20) // 백버튼보다 살짝 아래
-                //.padding(.leading, 0  ) // 좌측 여백
-            
-            Text("새로운 사람을 만났을 때,\n몇 나는 어떤 타입?")
-              .font(.system(size: 24, weight: .semibold))
-              .foregroundColor(.black)
-              .frame(width: 361, alignment: .topLeading)
-              .padding(.top, 10)
-              .lineSpacing(3)
-            Spacer()
-            
-            
-            
-            // 여기에 닉네임 입력 필드 등 추가 예정
-            
-            // ✅ 하단 버튼
-            NavigationLink(destination: FinalDishView()) {
-                HStack(alignment: .center, spacing: 10) {
-                    Text("등록하기")
-                        .font(.system(size: 20, weight: .semibold))
-                        .multilineTextAlignment(.center)
+        Group {
+            if currentIndex < questionGroups.count {
+                let currentGroup = questionGroups[currentIndex]
+                
+                VStack(spacing: 20) {
+                    // 질문 번호
+                    Text("\(currentIndex + 1)/\(questionGroups.count)")
+                        .font(Font.custom("Righteous-Regular", size: 30).weight(.bold))
+                        .foregroundColor(Color(red: 1, green: 0.22, blue: 0.1))
+                        .frame(width: 344.28, height: 0, alignment: .leading)
+                        .padding(.top, 30)
+                        .offset(x: -6)
+                    
+                    // 질문 text
+                    Text(currentGroup.questionTitle)
+                        .font(.system(size: 25, weight: .semibold))
                         .foregroundColor(.black)
+                        .frame(width: 361, height: 80, alignment: .topLeading)
+                        .lineSpacing(3)
+                        .lineLimit(2)
+                        .offset(y: 7)
+                    
+                    // 선택지
+                    VStack(spacing: 20) {
+                        ForEach(currentGroup.options, id: \.id) { option in
+                            Button(action: {
+                                if selectedOptions.count > currentIndex {
+                                    selectedOptions[currentIndex] = option
+                                } else {
+                                    selectedOptions.append(option)
+                                }
+                                currentIndex += 1
+                            }) {
+                                QuestionCard(
+                                    lineColor: option.lineColor,
+                                    backgroundColor: option.backgroundColor,
+                                    plateImage: option.plateImage,
+                                    foodImage: option.foodImage,
+                                    foodText: option.foodText,
+                                    description: option.description,
+                                    isSelected: selectedOptions.count > currentIndex && selectedOptions[currentIndex].id == option.id,
+                                    selectionBorderColor: .orange
+                                )
+                            }
+                        }
+                    }
+                    
+                    Spacer()
                 }
-                .padding(.horizontal, 0)
-                .padding(.vertical, 11)
-                .frame(width: 361, height: 64.19385, alignment: .center)
-                .background(Color(red: 1, green: 0.78, blue: 0.28))
-                .cornerRadius(9)
+                .padding(.horizontal)
+                
+            } else {
+                FinalDishView(selectedOptions: selectedOptions)
+                    .environmentObject(user)
             }
-
-            .padding(.bottom, 40) // 하단 여백
         }
-        .navigationBarTitle("")
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
-                    dismiss()
+                    if currentIndex == 0 {
+                        dismiss()
+                    } else {
+                        currentIndex -= 1
+                    }
                 }) {
                     Image("Backbutton")
                         .resizable()
                         .frame(width: 19, height: 19)
-                        .padding(.leading, 0)
                 }
+            }
+        }
+        .onAppear {
+            if questionGroups.isEmpty {
+                questionGroups = Array(allQuestionGroups.shuffled().prefix(4))
+                print("✅ 질문 로딩됨")
             }
         }
     }
@@ -68,10 +101,9 @@ struct ChoiceView: View {
 
 
 
-
-#Preview {
-    NavigationStack {
-        ChoiceView()
-    }
-}
-
+//#Preview {
+//    NavigationStack {
+//        ChoiceView()
+//            .environmentObject(UserModel())
+//    }
+//}

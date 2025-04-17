@@ -5,10 +5,13 @@
 //  Created by 이시은 on 4/15/25.
 //
 
+//닉네임 버튼 입력 x -> 버튼 비활성화 추가
+
 import SwiftUI
 
 struct NickNameView: View {
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var user: UserModel //닉네임 저장
     @State private var nickname: String = ""
 
     var body: some View {
@@ -85,7 +88,8 @@ struct NickNameView: View {
             
             // 하단 버튼
             VStack {
-                NavigationLink(destination: PlateView()) {
+                NavigationLink(destination: PlateView())
+                {
                     HStack(alignment: .center, spacing: 10) {
                         Text("등록하기")
                             .font(.system(size: 20, weight: .semibold))
@@ -97,6 +101,12 @@ struct NickNameView: View {
                     .background(Color(red: 1, green: 0.78, blue: 0.28))
                     .cornerRadius(9)
                 }
+                .simultaneousGesture(TapGesture().onEnded {
+                    guard !nickname.isEmpty else { return }
+                        user.nickname = nickname
+                        user.saveNicknameToFirebase() // 🔥 저장!
+                })
+
                 .padding(.bottom, 40)
             }
         }
@@ -124,14 +134,3 @@ struct NickNameView: View {
         NickNameView()
     }
 }
-
-
-
-
-
-#Preview {
-    NavigationStack {
-        NickNameView()
-    }
-}
-

@@ -11,6 +11,7 @@ struct CheckBackground: View {
     var lineColor: Color
     var backgroundColor: Color
     var lineSize: CGFloat = 20
+    var cornerRadius: CGFloat = 0
     var spacing: CGFloat = 20
     var opacity: Double = 1.0 // ✅ 새로 추가된 속성
 
@@ -48,6 +49,7 @@ struct CheckBackground: View {
                 .blendMode(.multiply)
             }
             .frame(width: geometry.size.width, height: geometry.size.height)
+            .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
         }
         .ignoresSafeArea()
     }
@@ -56,5 +58,5 @@ struct CheckBackground: View {
 
 
 #Preview {
-    CheckBackground(lineColor: Color(red: 1, green: 0.94, blue: 0.63), backgroundColor: Color(red: 100, green: 100, blue: 100),opacity: 0.6)
+    CheckBackground(lineColor: Color(red: 1, green: 0.94, blue: 0.63), backgroundColor: Color(red: 100, green: 100, blue: 100),cornerRadius : 30, opacity: 0.6)
 }
