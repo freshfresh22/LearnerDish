@@ -5,41 +5,109 @@
 //  Created by 이시은 on 4/19/25.
 //
 
-
-//TEST RenderDishView 파베데이터로 접시가 잘 그려지고 있는지 확인
+////TEST 이미지 저장 파베에 되고있는지  확인
 import SwiftUI
 
 struct TestDishListView: View {
-    @ObservedObject var firestoreManager = FirestoreManager()
+    @StateObject private var firestoreManager = FirestoreManager()
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 20) {
-                Text("🍽 불러온 디쉬")
-                    .font(.title)
-                    .bold()
-
-                ForEach(firestoreManager.dishes, id: \.id) { dish in
+            LazyVStack {
+                ForEach(firestoreManager.dishes.prefix(12)) { dish in
                     VStack(spacing: 10) {
-                        // 접시 닉네임도 같이 보기 좋게
-                        Text("👤 \(dish.nickname)의 디쉬")
-                            .font(.headline)
+                        // ✅ 이미지 URL이 있을 때만 출력
+                        if let urlString = dish.imageURL, let url = URL(string: urlString) {
+                            AsyncImage(url: url) { phase in
+                                switch phase {
+                                case .empty:
+                                    ProgressView()
+                                case .success(let image):
+                                    image
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 260, height: 260)
+                                case .failure:
+                                    Image(systemName: "xmark.circle")
+                                        .resizable()
+                                        .frame(width: 50, height: 50)
+                                @unknown default:
+                                    EmptyView()
+                                }
+                            }
+                        } else {
+                            Text("❌ 이미지 URL 없음")
+                                .foregroundColor(.red)
+                        }
 
-                        RenderedDishView(dish: dish)
-                            .frame(width: 260, height: 260)
+                        Text(dish.nickname)
+                            .font(.headline)
                     }
                     .padding()
-                    .background(Color.yellow.opacity(0.1))
-                    .cornerRadius(12)
                 }
             }
-            .padding()
         }
         .onAppear {
             firestoreManager.fetchDishes()
         }
     }
 }
+
+
+
+////TEST FinalDishList 최종 접시 리스트가 잘 그려지고 있는지 확인
+//import SwiftUI
+//
+//struct TestDishListView: View {
+//    @ObservedObject var firestoreManager = FirestoreManager()
+//    @State private var selectedDish: DishModel? = nil
+//
+//    var body: some View {
+//        FinalDishList(dishes: firestoreManager.dishes) { dish in
+//            selectedDish = dish
+//            print("✅ 선택된 디쉬: \(dish.nickname)")
+//        }
+//        .onAppear {
+//            firestoreManager.fetchDishes()
+//        }
+//    }
+//}
+
+
+////TEST RenderDishView 파베데이터로 접시가 잘 그려지고 있는지 확인
+//import SwiftUI
+//
+//struct TestDishListView: View {
+//    @ObservedObject var firestoreManager = FirestoreManager()
+//
+//    var body: some View {
+//        ScrollView {
+//            VStack(spacing: 20) {
+//                Text("🍽 불러온 디쉬")
+//                    .font(.title)
+//                    .bold()
+//
+//                ForEach(firestoreManager.dishes, id: \.id) { dish in
+//                    VStack(spacing: 10) {
+//                        // 접시 닉네임도 같이 보기 좋게
+//                        Text("👤 \(dish.nickname)의 디쉬")
+//                            .font(.headline)
+//
+//                        RenderedDishView(dish: dish)
+//                            .frame(width: 260, height: 260)
+//                    }
+//                    .padding()
+//                    .background(Color.yellow.opacity(0.1))
+//                    .cornerRadius(12)
+//                }
+//            }
+//            .padding()
+//        }
+//        .onAppear {
+//            firestoreManager.fetchDishes()
+//        }
+//    }
+//}
 
 
 

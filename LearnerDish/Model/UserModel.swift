@@ -28,6 +28,9 @@ class UserModel: ObservableObject {
 
     // ✅ 최종 완성된 디쉬 저장
     @Published var dishes: [DishModel] = []
+    
+    @Published var path: NavigationPath = NavigationPath()
+
 
     // ✅ 닉네임 저장
     func saveNicknameToFirebase() {

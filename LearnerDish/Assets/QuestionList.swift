@@ -53,7 +53,7 @@ let allQuestionGroups: [QuestionGroup] = [
         questionTitle: "혼자 vs 같이 있을 때\n나는 어떤 모습일까?",
         options: [
             QuestionOption(
-                foodText: "팟타이",
+                foodText: "마라탕",
                 foodImage: "마라탕",
                 plateImage: "Plate04",
                 lineColor : Color(red: 1.0, green: 0.95, blue: 0.75),
@@ -61,7 +61,7 @@ let allQuestionGroups: [QuestionGroup] = [
                 description: "혼자서도 잘 노는 팟타이"
             ),
             QuestionOption(
-                foodText: "삼겹살",
+                foodText: "능이백숙",
                 foodImage: "능이백숙",
                 plateImage: "Plate05",
                 lineColor : Color(red: 1.0, green: 0.95, blue: 0.75),
@@ -75,7 +75,7 @@ let allQuestionGroups: [QuestionGroup] = [
         questionTitle: "3번\n나는 어떤 모습일까?",
         options: [
             QuestionOption(
-                foodText: "팟타이",
+                foodText: "마라탕",
                 foodImage: "마라탕",
                 plateImage: "Plate04",
                 lineColor : Color(red: 1.0, green: 0.95, blue: 0.75),
@@ -83,7 +83,7 @@ let allQuestionGroups: [QuestionGroup] = [
                 description: "혼자서도 잘 노는 팟타이"
             ),
             QuestionOption(
-                foodText: "삼겹살",
+                foodText: "능이백숙",
                 foodImage: "능이백숙",
                 plateImage: "Plate05",
                 lineColor : Color(red: 1.0, green: 0.95, blue: 0.75),
@@ -97,7 +97,7 @@ let allQuestionGroups: [QuestionGroup] = [
         questionTitle: "4번\n나는 어떤 모습일까?",
         options: [
             QuestionOption(
-                foodText: "팟타이",
+                foodText: "마라탕",
                 foodImage: "마라탕",
                 plateImage: "Plate04",
                 lineColor : Color(red: 1.0, green: 0.95, blue: 0.75),
@@ -105,7 +105,7 @@ let allQuestionGroups: [QuestionGroup] = [
                 description: "혼자서도 잘 노는 팟타이"
             ),
             QuestionOption(
-                foodText: "삼겹살",
+                foodText: "능이백숙",
                 foodImage: "능이백숙",
                 plateImage: "Plate05",
                 lineColor : Color(red: 1.0, green: 0.95, blue: 0.75),
@@ -119,7 +119,7 @@ let allQuestionGroups: [QuestionGroup] = [
         questionTitle: "5번\n나는 어떤 모습일까?",
         options: [
             QuestionOption(
-                foodText: "팟타이",
+                foodText: "마라탕",
                 foodImage: "마라탕",
                 plateImage: "Plate04",
                 lineColor : Color(red: 1.0, green: 0.95, blue: 0.75),
@@ -127,7 +127,7 @@ let allQuestionGroups: [QuestionGroup] = [
                 description: "혼자서도 잘 노는 팟타이"
             ),
             QuestionOption(
-                foodText: "삼겹살",
+                foodText: "능이백숙",
                 foodImage: "능이백숙",
                 plateImage: "Plate05",
                 lineColor : Color(red: 1.0, green: 0.95, blue: 0.75),

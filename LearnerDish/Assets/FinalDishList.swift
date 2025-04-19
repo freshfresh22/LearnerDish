@@ -5,56 +5,55 @@
 //  Created by 이시은 on 4/17/25.
 //
 
+
 import SwiftUI
 
 struct FinalDishList: View {
     let dishes: [DishModel]
-    let onSelect: (DishModel) -> Void // 디쉬 클릭 시 처리할 동작
+    let onSelect: (DishModel) -> Void
+
+    
+    @State private var selectedDish: DishModel?
 
     var body: some View {
-        VStack(spacing: -20) {
-            ForEach(Array(dishes.enumerated()), id: \.1.id) { index, dish in
-                Button(action: {
-                    onSelect(dish)
-                }) {
-                    Image(uiImage: dish.image)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 205, height: 205)
-                        .clipped()
-                        .cornerRadius(20)
-                        .shadow(radius: 4)
+        NavigationStack {
+            VStack(spacing: -20) {
+                ForEach(Array(dishes.prefix(12).enumerated()), id: \.0) { index, dish in
+                    NavigationLink(
+                        destination: RunnerDishView(dish: dish),
+                        label: {
+                            RenderedDishView(dish: dish)
+                            .frame(width: 260, height: 260)
+                            .padding(.horizontal, 20)
+                            .frame(
+                                maxWidth: .infinity,
+                                alignment: index % 2 == 0 ? .leading : .trailing
+                            )
+                        }
+                    )
+                    .background(Color.clear)
+                    .simultaneousGesture(TapGesture().onEnded {
+                        selectedDish = dish
+                        onSelect(dish)
+                    })
                 }
-                .frame(maxWidth: .infinity,
-                       alignment: index % 2 == 0 ? .leading : .trailing)
-                .padding(.horizontal, 20)
             }
+            .padding(.top, 20)
+            .background(Color.clear)
         }
-        .padding(.top, 20)
-    }
-}
-
-// ⚠️ Firebase 연동 시 예상 변경 사항:
-//
-// 1. DishModel → imageURL (String) 형태로 바뀔 수 있음
-//    - Image(uiImage: dish.image) → AsyncImage(url: URL(string: dish.imageURL))
-//
-// 2. id 값이 UUID() → Firestore ID(String)으로 바뀔 수 있음
-//
-// 3. 클릭 시 dish 자체를 넘기기보다 dish.id만 넘기고 서버에서 다시 조회하는 방식도 고려 가능
-
-
-#Preview {
-    let previewDishes: [DishModel] = [
-        DishModel(image: UIImage(named: "Plate01") ?? UIImage()),
-        DishModel(image: UIImage(named: "Plate02") ?? UIImage()),
-        DishModel(image: UIImage(named: "Plate03") ?? UIImage()),
-        DishModel(image: UIImage(named: "Plate04") ?? UIImage())
-    ]
-
-    return FinalDishList(dishes: previewDishes) { selected in
-        print("Selected: \(selected.id)")
     }
 }
 
 
+//#Preview {
+//    let sampleDishes: [DishModel] = [
+//        DishModel(id: "1", nickname: "시은", selectedPlate: "Plate01", selectedFoods: ["마라탕", "마라탕", "마라탕", "마라탕"], rotation: 0),
+//        DishModel(id: "2", nickname: "사용자", selectedPlate: "Plate02", selectedFoods: ["마라탕", "마라탕", "마라탕", "마라탕"], rotation: 45),
+//        DishModel(id: "3", nickname: "사용자", selectedPlate: "Plate02", selectedFoods: ["마라탕", "마라탕", "마라탕", "마라탕"], rotation: 45),
+//        DishModel(id: "4", nickname: "사용자", selectedPlate: "Plate02", selectedFoods: ["마라탕", "마라탕", "마라탕", "마라탕"], rotation: 45)
+//    ]
+//
+//    FinalDishList(dishes: sampleDishes) { selectedDish in
+//        print("✅ 클릭된 접시: \(selectedDish.nickname)")
+//    }
+//}
