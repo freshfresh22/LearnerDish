@@ -8,6 +8,8 @@ import SwiftUI
 
 struct RunnerDishView: View {
     let dish: DishModel
+    var showToolbar: Bool = true  // ← 기본값 true로 두면 기존 코드 다 유지 가능
+    
     @Environment(\.dismiss) var dismiss
     @State private var showReviewSheet = false
 
@@ -66,11 +68,15 @@ struct RunnerDishView: View {
         }
         .navigationBarBackButtonHidden(true)
         .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: { dismiss() }) {
-                    Image("Backbutton")
-                        .resizable()
-                        .frame(width: 19, height: 19)
+            if showToolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Image("Backbutton")
+                            .resizable()
+                            .frame(width: 19, height: 19)
+                    }
                 }
             }
         }
@@ -82,7 +88,6 @@ struct RunnerDishView: View {
 
 
 #Preview {
-    NavigationStack {
         RunnerDishView(dish: DishModel(
             id: "sampleID",
             nickname: "싱싱이",
@@ -90,5 +95,4 @@ struct RunnerDishView: View {
             selectedFoods: ["마라탕", "능이백숙", "샤브샤브", "부대찌개"],
             rotation: 30, imageURL: ""
         ))
-    }
 }

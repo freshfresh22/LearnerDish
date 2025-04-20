@@ -12,16 +12,17 @@
 //
 //  Created by 이시은 on 4/16/25.
 //
-
 import SwiftUI
 
 struct MainView: View {
+    
     @EnvironmentObject var userModel: UserModel
     @StateObject private var firestoreManager = FirestoreManager()
-
+    
     @State private var showFoodList = false
-    @State private var selectedDish: DishModel? = nil // ✅ 선택된 접시
     @State private var goToRunnerDish = false
+    @State private var goToMyDishView = false
+    @State private var selectedDish: DishModel? = nil
 
     var body: some View {
         NavigationStack {
@@ -53,12 +54,16 @@ struct MainView: View {
                                     dishes: firestoreManager.dishes,
                                     onSelect: { dish in
                                         selectedDish = dish
+                                        goToRunnerDish = true
+                                        print("✅ 선택된 디쉬: \(dish.nickname)")
                                     }
                                 )
                                 .padding(.top, 40)
-                                .offset(y: -40)
+                                .offset(y:-40)
+                                .background(Color.clear)
                             }
                         }
+                        .background(Color.clear)
                         .refreshable {
                             firestoreManager.fetchDishes {
                                 firestoreManager.dishes.shuffle()
@@ -95,17 +100,14 @@ struct MainView: View {
                         HStack {
                             Spacer()
                             Button(action: {
-                                if let myDish = userModel.dishes.first {
-                                    selectedDish = myDish
-                                } else {
-                                    print("❌ 내 접시 없음")
-                                }
+                                goToMyDishView = true
+                                print("MyButton tapped")
                             }) {
                                 Image("MyButton")
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
                                     .frame(width: 50.5, height: 54)
-                                    .offset(y: 10)
+                                    .offset(y:10)
                                     .shadow(color: Color.black.opacity(0.2), radius: 4, x: 0, y: 4)
                             }
                             .padding(.trailing, 34)
@@ -122,19 +124,23 @@ struct MainView: View {
                             .zIndex(2)
                     }
 
-                    // ✅ NavigationLink: RunnerDishView로 이동
+                    // ✅ Navigation: 접시 클릭 → RunnerDishView
                     NavigationLink(
-                        destination: Group{
+                        destination: Group {
                             if let dish = selectedDish {
                                 RunnerDishView(dish: dish)
-                            } else {
-                                EmptyView()
                             }
                         },
-                        isActive: Binding(
-                            get: { selectedDish != nil },
-                            set: { if !$0 { selectedDish = nil } }
-                        )
+                        isActive: $goToRunnerDish
+                    ) {
+                        EmptyView()
+                    }
+
+                    // ✅ Navigation: MyButton → MyDishView
+                    NavigationLink(
+                        destination: MyDishView()
+                            .navigationBarBackButtonHidden(true),
+                        isActive: $goToMyDishView
                     ) {
                         EmptyView()
                     }
