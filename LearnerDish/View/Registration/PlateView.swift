@@ -121,6 +121,7 @@ struct PlateView: View {
                 }
             }
         }
+        .enableSwipeBack()
     }
 }
 

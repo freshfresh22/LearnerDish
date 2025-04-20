@@ -13,6 +13,8 @@ struct NickNameView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var user: UserModel //닉네임 저장
     @State private var nickname: String = ""
+    @State private var isValidNickname: Bool = false
+
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -66,6 +68,12 @@ struct NickNameView: View {
                     .offset(y:95)
                     .zIndex(1) // 중간
                 
+                Text("영문, 공백 제외")
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundColor(.gray)
+                    .frame(width: 361, alignment: .center)
+                    .offset(y: 210) // 텍스트 위치 조정 (필요시)
+                
                 // 3. 텍스트필드
                 VStack(spacing: 4) {
                     Spacer().frame(height: 20)
@@ -77,6 +85,15 @@ struct NickNameView: View {
                         .textInputAutocapitalization(.none) // 선택사항
                         .disableAutocorrection(true) // 선택사항
                         .offset(y:83)
+                    
+                    // 텍스트필드 아래에 추가
+                    .onChange(of: nickname) { newValue in
+                        // 영어만, 공백 제외, 최소 1자 이상
+                        let regex = "^[A-Z]+$"
+                        isValidNickname = NSPredicate(format: "SELF MATCHES %@", regex).evaluate(with: newValue)
+                    }
+                    
+
                 }
                 .frame(height: 108.86133)
                 .zIndex(2) // 가장 앞
@@ -98,13 +115,17 @@ struct NickNameView: View {
                     }
                     .padding(.vertical, 11)
                     .frame(width: 361, height: 64.19385, alignment: .center)
-                    .background(Color(red: 1, green: 0.78, blue: 0.28))
+                    .background(isValidNickname ? Color(red: 1, green: 0.78, blue: 0.28) : Color.gray.opacity(0.4))
                     .cornerRadius(9)
                 }
+                .disabled(!isValidNickname) // 조건 불만족 시 비활성화
                 .simultaneousGesture(TapGesture().onEnded {
-                    guard !nickname.isEmpty else { return }
-                        user.nickname = nickname
-                        user.saveNicknameToFirebase() // 🔥 저장!
+                    guard isValidNickname else { return }
+                    user.nickname = nickname
+                    user.saveNicknameToFirebase()
+
+                    // ✅ 등록됨 기록
+                    UserDefaults.standard.set(true, forKey: "isNicknameRegistered")
                 })
 
                 .padding(.bottom, 40)
@@ -126,6 +147,9 @@ struct NickNameView: View {
             }
         }
         .padding(.horizontal, 16) // 좌우 여백 추가 (필요시 조절)
+        
+        .enableSwipeBack()
+       
     }
 }
 

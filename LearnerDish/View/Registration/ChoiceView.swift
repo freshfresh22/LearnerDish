@@ -77,33 +77,51 @@ struct ChoiceView: View {
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: {
-                    if currentIndex == 0 {
-                        dismiss()
-                    } else {
-                        currentIndex -= 1
+                if currentIndex < questionGroups.count {
+                    // 질문 중일 때만 백버튼 보여줌
+                    Button(action: {
+                        if currentIndex == 0 {
+                            dismiss()
+                        } else {
+                            currentIndex -= 1
+                        }
+                    }) {
+                        Image("Backbutton")
+                            .resizable()
+                            .frame(width: 19, height: 19)
                     }
-                }) {
-                    Image("Backbutton")
-                        .resizable()
-                        .frame(width: 19, height: 19)
                 }
             }
         }
+
         .onAppear {
             if questionGroups.isEmpty {
                 questionGroups = Array(allQuestionGroups.shuffled().prefix(4))
                 print("✅ 질문 로딩됨")
             }
         }
+
+        .gesture(
+            DragGesture()
+                .onEnded { value in
+                    if value.translation.width > 100 {
+                        if currentIndex == 0 {
+                            dismiss() // 1번 질문이면 → PlateView로
+                        } else if currentIndex > 0 {
+                            currentIndex -= 1 // 그 외는 → 이전 질문
+                        }
+                    }
+                }
+        )
+
     }
 }
 
 
 
-//#Preview {
-//    NavigationStack {
-//        ChoiceView()
-//            .environmentObject(UserModel())
-//    }
-//}
+#Preview {
+    NavigationStack {
+        ChoiceView()
+            .environmentObject(UserModel())
+    }
+}

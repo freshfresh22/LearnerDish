@@ -30,6 +30,7 @@ struct DishModel: Identifiable, Codable {
 
 
 
+
     // 🔄 Firestore 필드명이 "rotationOffset"이므로 매핑!
     enum CodingKeys: String, CodingKey {
         case id

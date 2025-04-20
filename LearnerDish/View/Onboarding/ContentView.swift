@@ -15,7 +15,8 @@ struct ContentView: View {
         NavigationStack {
             ZStack {
                 if showInviteView {
-                   //MainView()
+                    
+                  // MainView()
                     //TestDishListView()
                     InviteView() //🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧다시 수정
                         .environmentObject(user)

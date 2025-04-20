@@ -4,113 +4,91 @@
 //
 //  Created by 이시은 on 4/16/25.
 //
-
-//import SwiftUI
-//
-//struct RunnerDishView: View {
-//    @Environment(\.dismiss) var dismiss
-//    @EnvironmentObject var user: UserModel //닉네임 저장
-//    @State private var nickname: String = ""
-//
-//    var body: some View {
-//        VStack(alignment: .leading, spacing: 0) {
-//            // 안내 텍스트
-//            Text("셰프의 이름을 적어주세요!")
-//                .font(Font.custom("210 Everybody", size: 35).weight(.bold))
-//                .foregroundColor(Color(red: 1, green: 0.22, blue: 0.1))
-//                .frame(width: 344.28, alignment: .leading)
-//                .padding(.top, 20)
-//            
-//            Text("당신만의 레시피로 디쉬를 꾸며줄\n셰프의 닉네임 알려주세요.")
-//                .font(.system(size: 20, weight: .semibold))
-//                .foregroundColor(.black)
-//                .frame(width: 361, alignment: .topLeading)
-//                .padding(.top, 10)
-//                .lineSpacing(3)
-//            
-//            Spacer().frame(height: 40)
-//            
-//            
-//            Spacer()
-//            
-//            // 하단 버튼
-//            VStack {
-//                NavigationLink(destination: PlateView())
-//                {
-//                    HStack(alignment: .center, spacing: 10) {
-//                        Text("등록하기")
-//                            .font(.system(size: 20, weight: .semibold))
-//                            .multilineTextAlignment(.center)
-//                            .foregroundColor(.black)
-//                    }
-//                    .padding(.vertical, 11)
-//                    .frame(width: 361, height: 64.19385, alignment: .center)
-//                    .background(Color(red: 1, green: 0.78, blue: 0.28))
-//                    .cornerRadius(9)
-//                }
-//                .simultaneousGesture(TapGesture().onEnded {
-//                    user.nickname = nickname
-//                })
-//
-//                .padding(.bottom, 40)
-//            }
-//        }
-//        .ignoresSafeArea(.keyboard)
-//        
-//        .navigationBarTitle("")
-//        .navigationBarBackButtonHidden(true)
-//        .toolbar {
-//            ToolbarItem(placement: .navigationBarLeading) {
-//                Button(action: {
-//                    dismiss()
-//                }) {
-//                    Image("Backbutton")
-//                        .resizable()
-//                        .frame(width: 19, height: 19)
-//                }
-//            }
-//        }
-//        .padding(.horizontal, 16) // 좌우 여백 추가 (필요시 조절)
-//    }
-//}
-
 import SwiftUI
 
 struct RunnerDishView: View {
     let dish: DishModel
     @Environment(\.dismiss) var dismiss
+    @State private var showReviewSheet = false
+
+    func matchedOption(for foodName: String) -> QuestionOption? {
+        for group in allQuestionGroups {
+            if let match = group.options.first(where: { $0.foodText == foodName }) {
+                return match
+            }
+        }
+        return nil
+    }
 
     var body: some View {
-        VStack(spacing: 20) {
-            Text("러너 디쉬 뷰")
-                .font(.title)
-                .bold()
+        ZStack(alignment: .bottom) {
+            CheckBackground(
+                lineColor: Color(red: 1, green: 0.94, blue: 0.63),
+                backgroundColor: Color.white,
+                cornerRadius: 30,
+                opacity: 0.6
+            )
 
-            Text("디쉬 만든 사람: \(dish.nickname)")
-                .font(.headline)
+            VStack(spacing: 20) {
+                Text("\(dish.nickname)’s Dish")
+                    .font(.system(size: 28, weight: .bold))
+                    .foregroundColor(.red)
 
-            ForEach(dish.selectedFoods, id: \.self) { food in
-                Text("🍽️ \(food)")
+                RenderedDishView(dish: dish)
+                    .frame(width: 260, height: 260)
+
+                ForEach(dish.selectedFoods, id: \.self) { food in
+                    if let option = matchedOption(for: food) {
+                        HStack(spacing: 10) {
+                            Image(option.foodImage)
+                                .resizable()
+                                .frame(width: 40, height: 40)
+                            Text(option.description)
+                                .font(.system(size: 16))
+                        }
+                        .padding()
+                        .background(Color.white)
+                        .cornerRadius(12)
+                        .shadow(radius: 2)
+                    }
+                }
+
+                Spacer()
             }
+            .padding()
 
-            Spacer()
+            CustomBottomSheet(isPresented: $showReviewSheet) {
+                ReviewView(
+                    dishID: dish.id ?? "",
+                    currentUser: dish.nickname, currentHeight: 70
+                )
+            }
         }
-        .padding()
-        //.navigationTitle("Runner Dish")
-        //.navigationBarTitleDisplayMode(.inline)
-        //.navigationBarBackButtonHidden(false) // ✅ 왼쪽 상단 백버튼 자동 활성화
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: { dismiss() }) {
+                    Image("Backbutton")
+                        .resizable()
+                        .frame(width: 19, height: 19)
+                }
+            }
+        }
     }
 }
 
-//#Preview {
-//    NavigationStack {
-//        RunnerDishView(dish: DishModel(
-//            id: "sampleID",
-//            nickname: "시은",
-//            selectedPlate: "Plate01",
-//            selectedFoods: ["마라탕", "샤브샤브", "떡볶이", "순두부"],
-//            rotation: 45
-//        ))
-//    }
-//}
 
+
+
+
+#Preview {
+    NavigationStack {
+        RunnerDishView(dish: DishModel(
+            id: "sampleID",
+            nickname: "싱싱이",
+            selectedPlate: "Plate01",
+            selectedFoods: ["마라탕", "능이백숙", "샤브샤브", "부대찌개"],
+            rotation: 30, imageURL: ""
+        ))
+    }
+}
