@@ -13,6 +13,7 @@
 //  Created by 이시은 on 4/16/25.
 //
 import SwiftUI
+import FirebaseFirestore
 
 struct MainView: View {
     
@@ -148,126 +149,42 @@ struct MainView: View {
             }
             .onAppear {
                 firestoreManager.fetchDishes()
+
+                // ✅ 내 정보 복원 시도
+                if let nickname = UserDefaults.standard.string(forKey: "nickname"),
+                   let dishID = UserDefaults.standard.string(forKey: "myDishID") {
+
+                    userModel.nickname = nickname
+                    userModel.myDishID = dishID
+
+                    Firestore.firestore().collection("dishes").document(dishID).getDocument { snapshot, error in
+                        if let data = snapshot?.data() {
+                            let dish = DishModel(
+                                id: dishID,
+                                nickname: data["nickname"] as? String ?? "",
+                                selectedPlate: data["selectedPlate"] as? String ?? "",
+                                selectedFoods: data["selectedFoods"] as? [String] ?? [],
+                                rotation: data["rotationOffset"] as? Double ?? 0,
+                                imageURL: data["imageURL"] as? String ?? ""
+                            )
+
+                            userModel.dishes = [dish]
+                            print("✅ 내 디쉬 복원 성공: \(dish.nickname)")
+                        } else {
+                            print("❌ 내 디쉬 불러오기 실패: \(error?.localizedDescription ?? "No data")")
+                        }
+                    }
+                } else {
+                    print("ℹ️ UserDefaults에 저장된 nickname 또는 myDishID가 없습니다.")
+                }
+            }
+
             }
         }
     }
-}
+
 
 #Preview {
     MainView()
         .environmentObject(UserModel.shared)
 }
-
-
-//셔플 적용 -> 빌드 오류
-
-//import SwiftUI
-//
-//struct MainView: View {
-//    @StateObject private var firestoreManager = FirestoreManager()
-//    @State private var showFoodList = false
-//    @State private var shuffledDishes: [DishModel] = []
-//    @State private var shuffledDishesID = UUID() // 강제 뷰 갱신
-//
-//    var body: some View {
-//        GeometryReader { geometry in
-//            ZStack {
-//                Color.yellow.ignoresSafeArea()
-//
-//                VStack(spacing: -60) {
-//                    Color(red: 1, green: 0.94, blue: 0.63)
-//                        .frame(height: 130)
-//                        .ignoresSafeArea(edges: .top)
-//
-//                    ScrollView {
-//                        ZStack(alignment: .top) {
-//                            CheckBackground(
-//                                lineColor: Color(red: 1, green: 0.94, blue: 0.63),
-//                                backgroundColor: .white,
-//                                cornerRadius: 0,
-//                                opacity: 0.6
-//                            )
-//                            .frame(height: 1000)
-//
-//                            FinalDishList(
-//                                dishes: shuffledDishes,
-//                                onSelect: { dish in
-//                                    print("✅ 선택된 디쉬: \(dish.nickname)")
-//                                }
-//                            )
-//                            .id(shuffledDishesID)
-//                            .padding(.top, 40)
-//                            .offset(y: -40)
-//                            .background(Color.clear)
-//                        }
-//                        .background(Color.clear)
-//                    }
-//                    .refreshable {
-//                        let picked = Array(firestoreManager.dishes.shuffled().prefix(12))
-//                        shuffledDishes = picked.enumerated().map { index, dish in
-//                            var updatedDish = dish
-//                            updatedDish.isLeftAligned = index % 2 == 0
-//                            return updatedDish
-//                        }
-//                        shuffledDishesID = UUID() // 뷰 갱신
-//                        print("🔄 새로고침 지그재그 셔플됨: \(shuffledDishes.map { ($0.nickname, $0.isLeftAligned ? "←" : "→") })")
-//                    }
-//                }
-//
-//                VStack {
-//                    ZStack {
-//                        Text("만나고 싶은 디쉬를 골라보세요")
-//                            .font(Font.custom("210 Everybody", size: 25).weight(.bold))
-//                            .multilineTextAlignment(.center)
-//                            .foregroundColor(Color(red: 0.21, green: 0.21, blue: 0.21))
-//                            .padding(.vertical, 3)
-//                            .padding(.horizontal, 18)
-//                            .background(Color.white)
-//                            .cornerRadius(30)
-//                            .shadow(color: Color.black.opacity(0.2), radius: 3, x: 0, y: 4)
-//
-//                        HStack {
-//                            Spacer()
-//                            Button(action: {
-//                                showFoodList = true
-//                            }) {
-//                                Image("FoodListButton")
-//                                    .resizable()
-//                                    .frame(width: 24, height: 24)
-//                            }
-//                        }
-//                        .padding(.trailing, 34)
-//                    }
-//                    .padding(.top, 10)
-//
-//                    Spacer()
-//                }
-//                .zIndex(1)
-//
-//                if showFoodList {
-//                    FoodListView(isPresented: $showFoodList)
-//                        .background(Color.black.opacity(0.4).ignoresSafeArea())
-//                        .transition(.opacity)
-//                        .zIndex(2)
-//                }
-//            }
-//        }
-//        .onAppear {
-//            firestoreManager.fetchDishes {
-//                let picked = Array(firestoreManager.dishes.shuffled().prefix(12))
-//                shuffledDishes = picked.enumerated().map { index, dish in
-//                    var updatedDish = dish
-//                    updatedDish.isLeftAligned = index % 2 == 0
-//                    return updatedDish
-//                }
-//                shuffledDishesID = UUID()
-//                print("🚀 최초 셔플됨: \(shuffledDishes.map { ($0.nickname, $0.isLeftAligned ? "←" : "→") })")
-//            }
-//        }
-//    }
-//}
-//
-//
-//    #Preview {
-//        MainView()
-//    }

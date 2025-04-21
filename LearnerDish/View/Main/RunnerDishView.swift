@@ -12,6 +12,9 @@ struct RunnerDishView: View {
     
     @Environment(\.dismiss) var dismiss
     @State private var showReviewSheet = false
+    
+    @EnvironmentObject var userModel: UserModel
+
 
     func matchedOption(for foodName: String) -> QuestionOption? {
         for group in allQuestionGroups {
@@ -61,9 +64,19 @@ struct RunnerDishView: View {
 
             CustomBottomSheet(isPresented: $showReviewSheet) {
                 ReviewView(
-                    dishID: dish.id ?? "",
-                    currentUser: dish.nickname, currentHeight: 70
+                    dishOwner: dish.id!,
+                    currentUser: userModel.nickname ?? "익명",
+                    currentHeight: 700 // ← 적당한 고정값 주기
                 )
+                
+//                GeometryReader { geometry in
+//                    ReviewView(
+//                        dishID: dish.id!,
+//                        currentUser: userModel.nickname ?? "익명"
+//                        currentHeight: geometry.size.height
+//                    )
+//                }
+
             }
         }
         .navigationBarBackButtonHidden(true)

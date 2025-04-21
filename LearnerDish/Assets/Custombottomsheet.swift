@@ -44,23 +44,23 @@ struct CustomBottomSheet<Content: View>: View {
                 VStack(spacing: 0) {
                     content()
 
-                    Spacer()
-
-                    HStack {
-                        TextField("리뷰 쓰기...", text: .constant(""))
-                            .textFieldStyle(.roundedBorder)
-                            .focused($isInputFocused)
-                            .padding(.horizontal)
-
-                        Button("등록") {}
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 8)
-                            .background(Color.red)
-                            .foregroundColor(.white)
-                            .cornerRadius(8)
-                            .padding(.trailing)
-                    }
-                    .padding(.bottom, keyboardHeight + geo.safeAreaInsets.bottom + 80)
+//                    Spacer()
+//
+//                    HStack {
+//                        TextField("리뷰 쓰기...", text: .constant(""))
+//                            .textFieldStyle(.roundedBorder)
+//                            .focused($isInputFocused)
+//                            .padding(.horizontal)
+//
+//                        Button("등록") {}
+//                            .padding(.horizontal, 12)
+//                            .padding(.vertical, 8)
+//                            .background(Color.red)
+//                            .foregroundColor(.white)
+//                            .cornerRadius(8)
+//                            .padding(.trailing)
+//                    }
+//                    .padding(.bottom, keyboardHeight + geo.safeAreaInsets.bottom + 80)
                 }
                 .frame(height: expandedHeight - 80)
                 .background(Color.white)

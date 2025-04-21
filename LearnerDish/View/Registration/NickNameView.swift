@@ -126,6 +126,10 @@ struct NickNameView: View {
 
                     // ✅ 등록됨 기록
                     UserDefaults.standard.set(true, forKey: "isNicknameRegistered")
+                    UserDefaults.standard.set(nickname, forKey: "nickname")
+                    UserDefaults.standard.removeObject(forKey: "shouldStartAtNickNameView")
+
+
                 })
 
                 .padding(.bottom, 40)

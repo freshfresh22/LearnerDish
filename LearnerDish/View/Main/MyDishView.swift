@@ -13,6 +13,10 @@ struct MyDishView: View {
     @Environment(\.dismiss) var dismiss
 
     @State private var goToNickNameView = false
+    @State private var showDeleteAlert = false
+    
+    @State private var goToFixView = false
+
 
     var body: some View {
         ZStack(alignment: .topTrailing) {
@@ -24,18 +28,33 @@ struct MyDishView: View {
                     .padding()
             }
 
-            // ✅ 수정하기 버튼
-            Button(action: {
-                goToNickNameView = true
-            }) {
-                Text("수정하기")
-                    .font(.system(size: 15, weight: .bold))
-                    .foregroundColor(.white)
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 14)
-                    .background(Color(red: 1, green: 0.44, blue: 0.39))
-                    .cornerRadius(10)
-                    .shadow(radius: 2)
+            // ✅ 수정하기 + 계정삭제 버튼 묶음
+            VStack(alignment: .trailing, spacing: 10) {
+                Button(action: {
+                    goToNickNameView = true
+                }) {
+                    Text("수정하기")
+                        .font(.system(size: 15, weight: .bold))
+                        .foregroundColor(.white)
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 14)
+                        .background(Color(red: 1, green: 0.44, blue: 0.39))
+                        .cornerRadius(10)
+                        .shadow(radius: 2)
+                }
+
+                Button(action: {
+                    showDeleteAlert = true
+                }) {
+                    Text("계정삭제")
+                        .font(.system(size: 15, weight: .bold))
+                        .foregroundColor(.white)
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 14)
+                        .background(Color.gray)
+                        .cornerRadius(10)
+                        .shadow(radius: 2)
+                }
             }
             .padding(.top, 50)
             .padding(.trailing, 20)
@@ -61,5 +80,12 @@ struct MyDishView: View {
                 }
             }
         }
+        .alert("정말 계정을 삭제하시겠습니까?", isPresented: $showDeleteAlert) {
+            Button("삭제", role: .destructive) {
+                userModel.deleteAccountAndResetApp()
+            }
+            Button("취소", role: .cancel) {}
+        }
     }
 }
+
