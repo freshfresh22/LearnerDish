@@ -6,6 +6,63 @@
 //
 
 
+
+import SwiftUI
+
+struct Test: View {
+    @StateObject private var firestoreManager = FirestoreManager()
+    @EnvironmentObject var userModel: UserModel
+
+    var body: some View {
+        VStack {
+            if let firstDish = firestoreManager.dishes.first {
+                RunnerDishView(dish: firstDish)
+                    .environmentObject(userModel)
+            } else {
+                Text("접시 불러오는 중...")
+                    .onAppear {
+                        firestoreManager.fetchDishes()
+                    }
+            }
+        }
+    }
+}
+
+#Preview {
+    Test()
+        .environmentObject(UserModel()) // ✅ 필요
+}
+
+
+//import SwiftUI
+// 댓글 상자
+//struct TestDishListView: View {
+//    @StateObject private var firestoreManager = FirestoreManager()
+//
+//    var body: some View {
+//        VStack {
+//            if let firstDish = firestoreManager.dishes.first {
+//                ReviewView(
+//                    dishOwner: firstDish.nickname,
+//                    currentUser: "SINGSING", // 앱 사용자 닉네임
+//                    currentHeight: 700
+//                )
+//            } else {
+//                Text("접시 데이터를 불러오는 중...")
+//                    .onAppear {
+//                        firestoreManager.fetchDishes()
+//                    }
+//            }
+//        }
+//    }
+//}
+//
+//#Preview {
+//    TestDishListView()
+//}
+
+
+
 ////TEST 이미지 저장 파베에 되고있는지  확인
 //import SwiftUI
 //
@@ -76,39 +133,39 @@
 
 
 //TEST RenderDishView 파베데이터로 접시가 잘 그려지고 있는지 확인
-import SwiftUI
-
-struct TestDishListView: View {
-    @ObservedObject var firestoreManager = FirestoreManager()
-
-    var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                Text("🍽 불러온 디쉬")
-                    .font(.title)
-                    .bold()
-
-                ForEach(firestoreManager.dishes, id: \.id) { dish in
-                    VStack(spacing: 10) {
-                        // 접시 닉네임도 같이 보기 좋게
-                        Text("👤 \(dish.nickname)의 디쉬")
-                            .font(.headline)
-
-                        RenderedDishView(dish: dish)
-                            .frame(width: 260, height: 260)
-                    }
-                    .padding()
-                    .background(Color.yellow.opacity(0.1))
-                    .cornerRadius(12)
-                }
-            }
-            .padding()
-        }
-        .onAppear {
-            firestoreManager.fetchDishes()
-        }
-    }
-}
+//import SwiftUI
+//
+//struct TestDishListView: View {
+//    @ObservedObject var firestoreManager = FirestoreManager()
+//
+//    var body: some View {
+//        ScrollView {
+//            VStack(spacing: 20) {
+//                Text("🍽 불러온 디쉬")
+//                    .font(.title)
+//                    .bold()
+//
+//                ForEach(firestoreManager.dishes, id: \.id) { dish in
+//                    VStack(spacing: 10) {
+//                        // 접시 닉네임도 같이 보기 좋게
+//                        Text("👤 \(dish.nickname)의 디쉬")
+//                            .font(.headline)
+//
+//                        RenderedDishView(dish: dish)
+//                            .frame(width: 260, height: 260)
+//                    }
+//                    .padding()
+//                    .background(Color.yellow.opacity(0.1))
+//                    .cornerRadius(12)
+//                }
+//            }
+//            .padding()
+//        }
+//        .onAppear {
+//            firestoreManager.fetchDishes()
+//        }
+//    }
+//}
 
 
 
