@@ -16,7 +16,7 @@ struct FinalDishView: View {
     let selectedOptions: [QuestionOption]
     let foodSize: CGFloat = 100
 
-    @State private var randomRotation = Double.random(in: 0..<360)
+    @State private var randomRotation = Double.random(in: -30..<30) //회전 각도 범위
     @State private var navigateToMain = false
 
     var displayedOptions: [(index: Int, option: QuestionOption)] {

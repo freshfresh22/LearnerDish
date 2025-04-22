@@ -30,53 +30,84 @@ struct FoodListView: View {
             // 메인 카드
             VStack(spacing: 20) {
                 VStack(spacing: 10) {
-                    Image("FoodIcon") // 웃는 요리사 이미지로 대체해도 좋아
+                    Image("Logo")
                         .resizable()
-                        .frame(width: 40, height: 40)
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 72)
+                        .offset(y:11)
 
                     Text("Food List")
                         .font(.system(size: 24, weight: .bold))
                         .foregroundColor(.red)
+                        .offset(y:5)
                 }
 
                 TabView(selection: $currentPage) {
-                    ForEach(foodPages.indices, id: \.self) { index in
-                        VStack(spacing: 15) {
-                            ForEach(foodPages[index], id: \.name) { food in
-                                VStack(spacing: 4) {
-                                    Image(food.image)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 60, height: 60)
-                                    Text(food.name)
-                                        .font(.headline)
-                                    Text(food.desc)
-                                        .font(.subheadline)
-                                        .foregroundColor(.gray)
-                                }
-                                .padding()
-                                .background(Color(.systemGray6))
-                                .cornerRadius(12)
-                            }
+
+                    VStack(spacing: 10) { //1쪽
+                        HStack(spacing: 5) { //1열
+                            foodCard(image: "능이백숙", name: "능이백숙", desc: "조용히 알아가는 타입", back: "foodlist01")
+                            foodCard(image: "마라탕", name: "마라탕", desc: "화끈한 타입", back: "foodlist01")
                         }
-                        .tag(index)
+                        HStack(spacing: 5) { //2열
+                            foodCard(image: "능이백숙", name: "능이백숙", desc: "조용히 알아가는 타입", back: "foodlist02")
+                            foodCard(image: "마라탕", name: "마라탕", desc: "화끈한 타입", back: "foodlist02")
+                        }
+                        HStack(spacing: 5) { //3열
+                            foodCard(image: "능이백숙", name: "능이백숙", desc: "조용히 알아가는 타입", back: "foodlist04")
+                            foodCard(image: "마라탕", name: "마라탕", desc: "화끈한 타입", back: "foodlist04")
+                        }
                     }
-                }
-                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never)) // 인디케이터 수동으로 만들거라 숨김
-                .frame(height: 300)
+                    .tag(0)
+                    
+                    VStack(spacing: 10) { //1쪽
+                        HStack(spacing: 5) { //1열
+                            foodCard(image: "능이백숙", name: "능이백숙", desc: "조용히 알아가는 타입", back: "foodlist04")
+                            foodCard(image: "마라탕", name: "마라탕", desc: "화끈한 타입", back: "foodlist04")
+                        }
+                        HStack(spacing: 5) { //2열
+                            foodCard(image: "능이백숙", name: "능이백숙", desc: "조용히 알아가는 타입", back: "foodlist03")
+                            foodCard(image: "마라탕", name: "마라탕", desc: "화끈한 타입", back: "foodlist03")
+                        }
+                        HStack(spacing: 5) { //3열
+                            foodCard(image: "능이백숙", name: "능이백숙", desc: "조용히 알아가는 타입", back: "foodlist05")
+                            foodCard(image: "마라탕", name: "마라탕", desc: "화끈한 타입", back: "foodlist05")
+                        }
+                    }
+                    .tag(1)
+                    
+                    VStack(spacing: 10) { //1쪽
+                        HStack(spacing: 5) { //1열
+                            foodCard(image: "능이백숙", name: "능이백숙", desc: "조용히 알아가는 타입", back: "foodlist02")
+                            foodCard(image: "마라탕", name: "마라탕", desc: "화끈한 타입", back: "foodlist02")
+                        }
+                        HStack(spacing: 5) { //2열
+                            foodCard(image: "능이백숙", name: "능이백숙", desc: "조용히 알아가는 타입", back: "foodlist04")
+                            foodCard(image: "마라탕", name: "마라탕", desc: "화끈한 타입", back: "foodlist04")
+                        }
+                        HStack(spacing: 5) { //3열
+                            foodCard(image: "능이백숙", name: "능이백숙", desc: "조용히 알아가는 타입", back: "foodlist03")
+                            foodCard(image: "마라탕", name: "마라탕", desc: "화끈한 타입", back: "foodlist03")
+                        }
+                    }
+                    .tag(2)
+
+        
+                } //음식 리스트
+               .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
 
                 // 페이지 인디케이터
-                HStack(spacing: 8) {
+                HStack(spacing: 6) {
                     ForEach(0..<foodPages.count, id: \.self) { index in
                         Circle()
                             .fill(index == currentPage ? Color.black : Color.gray.opacity(0.4))
-                            .frame(width: 8, height: 8)
+                            .frame(width: 10, height: 10)
                     }
                 }
                 .padding(.bottom, 10)
             }
             .padding()
-            .frame(width: 320, height: 600)
+            .frame(width: 347, height: 617)
             .background(Color.white)
             .cornerRadius(24)
             .shadow(radius: 10)

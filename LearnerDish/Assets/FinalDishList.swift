@@ -13,14 +13,14 @@ struct FinalDishList: View {
     let onSelect: (DishModel) -> Void
 
     var body: some View {
-        VStack(spacing: -20) {
+        VStack(spacing: -20) { //접시 상하 간격
             ForEach(Array(dishes.prefix(12).enumerated()), id: \.offset) { index, dish in
                 Button(action: {
                     onSelect(dish)
                 }) {
                     RenderedDishView(dish: dish)
                         .frame(width: 260, height: 260)
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 6) //접시 좌우 간격
                         .frame(
                             maxWidth: .infinity,
                             alignment: index % 2 == 0 ? .leading : .trailing
@@ -32,6 +32,8 @@ struct FinalDishList: View {
         .background(Color.clear)
     }
 }
+
+
 
 //네비게이션 중복 제거
 //import SwiftUI

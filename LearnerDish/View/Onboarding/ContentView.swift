@@ -21,11 +21,13 @@ struct ContentView: View {
             ZStack {
                 if showNextView {
                     if isNicknameRegistered {
-                        MainView()
+                        //TestDishListView()
+                       // InviteView()
+                      MainView()
                             .environmentObject(user)
                     } else {
-                        //MainView()
-                        InviteView()
+                        MainView()
+                        //InviteView()
                             .environmentObject(user)
                     }
                 } else {

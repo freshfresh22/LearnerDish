@@ -68,7 +68,7 @@ struct NickNameView: View {
                     .offset(y:95)
                     .zIndex(1) // 중간
                 
-                Text("영문, 공백 제외")
+                Text("영문 대문자, 공백 제외")
                     .font(.system(size: 18, weight: .medium))
                     .foregroundColor(.gray)
                     .frame(width: 361, alignment: .center)

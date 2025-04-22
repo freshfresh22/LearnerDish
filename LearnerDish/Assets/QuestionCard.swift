@@ -30,7 +30,7 @@ struct QuestionCard: View {
             .frame(width: 360, height: 270)
             .overlay(
                 RoundedRectangle(cornerRadius: 20)
-                    .stroke(isSelected ? selectionBorderColor : .clear, lineWidth: 4)
+                    .stroke(isSelected ? selectionBorderColor : .clear, lineWidth: 0)
             )
             
             // 접시 + 설명

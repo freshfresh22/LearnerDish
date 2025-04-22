@@ -40,6 +40,9 @@ class UserModel: ObservableObject {
     //myDishID 저장용 프로퍼티 추가
     @Published var myDishID: String? = nil
     
+    @Published var isReviewVisible: Bool = false
+
+    
     // ✅ 닉네임 저장
     func saveNicknameToFirebase() {
         let db = Firestore.firestore()
@@ -279,4 +282,4 @@ class UserModel: ObservableObject {
     //    - uploadDishToFirebase(dish: DishModel)
     //
     // 3. image: UIImage → URL 기반 저장으로 변경 가능
-    //    (Storage에 올리고 URL만 저장) 이거에 맞게 각 파일 수정
+    //    (Storage에 올리고 URL만 저장) 이거에 맞게 각 파일 수정 

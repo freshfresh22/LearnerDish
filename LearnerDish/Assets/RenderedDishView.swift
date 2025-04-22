@@ -64,7 +64,7 @@ import SwiftUI
 
 struct RenderedDishView: View {
     let dish: DishModel // ✅ 이제 모델 하나만 받음
-    let size: CGFloat = 220
+    let size: CGFloat = 230 //러너디쉬뷰도 바뀜
     let foodSize: CGFloat = 90
 
     @State private var localID = UUID().uuidString // ✅ 상태로 관리되는 ID (String)
@@ -94,6 +94,7 @@ struct RenderedDishView: View {
             Image(dish.selectedPlate)
                 .resizable()
                 .frame(width: size, height: size)
+                .shadow(radius: 5)
 
             ZStack {
                 ForEach(Array(dish.selectedFoods.prefix(4).enumerated()), id: \ .offset) { offset, foodName in

@@ -9,7 +9,9 @@ import SwiftUI
 
 struct CustomBottomSheet<Content: View>: View {
     @Binding var isPresented: Bool
+    let nickname: String
     let content: () -> Content
+    
 
     private let collapsedHeight: CGFloat = 100
     private let expandedHeight: CGFloat = 760
@@ -24,11 +26,17 @@ struct CustomBottomSheet<Content: View>: View {
             VStack(spacing: 0) {
                 // ✅ REVIEW 텍스트 + 지붕
                 ZStack {
-                    Image("SheetRoof")
-                        .frame(width: 100, height: 90)
-                        .offset(y: 20)
+                    GeometryReader {geometry in
+                        Image("SheetRoof")
+                            .resizable() // ← 꼭 필요
+                            .aspectRatio(contentMode: .fit) // ← 비율 유지하며 꽉 차게
+                            .frame(width: geometry.size.width + 50) // ← 너비만 주면 높이는 자동 계산됨
+                            .padding(.horizontal, -25)
+                            .offset(y: 0)
+                    }
+                    .frame(height: 114) // ✅ 전체 높이는 적당히 한정해줘야 함
 
-                    Text("REVIEW")
+                    Text("\(nickname) REVIEW")
                         .font(Font.custom("Righteous", size: 23))
                         .foregroundColor(.red)
                         .offset(y: -5)
@@ -80,6 +88,10 @@ struct CustomBottomSheet<Content: View>: View {
                             isExpanded = false
                             isPresented = false
                             isInputFocused = false
+                            
+                            //키보드도 같이 닫기
+                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+
                         }
                     }
             )
@@ -91,12 +103,13 @@ struct CustomBottomSheet<Content: View>: View {
                     let safeAreaBottom = geo.safeAreaInsets.bottom
                     let keyboardTopY = keyboardFrame.origin.y
 
-                    withAnimation(.easeOut(duration: 0.8)) {
+                    withAnimation(.easeOut(duration: 0.5)) {
                         keyboardHeight = max(0, screenHeight - keyboardTopY - safeAreaBottom)
                     }
                 }
             }
         }
         .edgesIgnoringSafeArea(.bottom)
+        .ignoresSafeArea(.keyboard)
     }
 }

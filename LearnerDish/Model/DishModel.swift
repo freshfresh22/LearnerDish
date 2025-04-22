@@ -41,4 +41,3 @@ struct DishModel: Identifiable, Codable {
         case imageURL
     }
 }
-
